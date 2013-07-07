@@ -68,16 +68,23 @@ SQL Parser:
 Friendly returns
 ------
 
+    res, err = db:query('INSERT INTO table SET id=NULL, name="Bob"')
+    if res then
+        print('inserted', res.affected_rows, 'rows')
+    else
+        print('not yet')
+    end
+    
     res, err = db:query('DELETE FROM table WHERE id=123')
     if res then
-        print('deleted')
+        print('deleted', res.affected_rows, 'rows')
     else
         print('not yet')
     end
     
     res, err = db:query('UPDATE table SET name='aaa' WHERE id=123')
     if res then
-        print('updated')
+        print('updated', res.affected_rows, 'rows')
     else
         print('not yet')
     end
