@@ -3,6 +3,78 @@ Name
 
 lua-resty-mysql - Lua MySQL client driver for ngx_lua based on the cosocket API
 
+Modifs
+======
+by oneoo
+
+* add function get_row/get_results
+* modif query function
+* support ngx_lua and alilua
+
+**syntax:** row, err = db:get_row(sql)
+
+if row count < 1 then return nil.
+
+**syntax:** rows, err = db:get_results(sql)
+
+if row count < 1 then return nil.
+
+**syntax:** res, err = db:query(sql, [params1[, params2]])
+
+SQL Parser:
+------
+* case 1
+
+    res, err = db:query('SELECT * FROM table WHERE id=? AND name=? AND age > ?', 1, 'Bob', 18)
+    --the sql will be parse to: SELECT * FROM table WHERE id=1 AND name='Bob' AND age > 18
+    
+    res, err = db:query('SELECT * FROM table WHERE id=? AND name=? AND age > ?', {1, 'Bob', 18})
+    --the sql will be parse to: SELECT * FROM table WHERE id=1 AND name='Bob' AND age > 18
+
+* case 2
+
+    res, err = db:query('SELECT * FROM table WHERE ?', {id=1, name='Bob', age = 18})
+    --the sql will be parse to: SELECT * FROM table WHERE id=1 AND name='Bob' AND age = 18
+
+* case 3
+
+    res, err = db:query('UPDATE table SET ? WHERE ?', {name='Bob2'}, {id=1, age=18})
+    --the sql will be parse to: UPDATE table SET name='Bob2' WHERE id=1 AND age=18
+    
+    res, err = db:query('UPDATE table SET ? WHERE ?', {name=null}, {id=1, name=null})
+    --the sql will be parse to: UPDATE table SET name=NULL WHERE id=1 AND name IS NULL
+
+* case 4
+
+    res, err = db:query('INSERT INTO table SET ?', {id=null, name='Bob1'})
+    --the sql will be parse to: INSERT INTO table SET id=NULL, name='Bob1'
+                                                
+    res, err = db:query('INSERT INTO table ?', {
+                                                {id=null, name='Bob1'},
+                                                {id=null, name='Bob2'},
+                                                {id=null, name='Bob3'},
+                                                })
+    --the sql will be parse to: INSERT INTO table (id,name) VALUES (id=NULL, name='Bob1'), 
+                                                (id=NULL, name='Bob2'), 
+                                                (id=NULL, name='Bob3'); 
+
+Friendly returns
+------
+
+    res, err = db:query('DELETE FROM table WHERE id=123')
+    if res then
+        print('deleted')
+    else
+        print('not yet')
+    end
+    
+    res, err = db:query('UPDATE table SET name='aaa' WHERE id=123')
+    if res then
+        print('updated')
+    else
+        print('not yet')
+    end
+
 Status
 ======
 
