@@ -61,9 +61,9 @@ SQL Parser:
                                                 {id=null, name='Bob3'},
                                                 })
                                                 
-    --the sql will be parse to: INSERT INTO table (id,name) VALUES (id=NULL, name='Bob1'), 
-                                                (id=NULL, name='Bob2'), 
-                                                (id=NULL, name='Bob3'); 
+    --the sql will be parse to: INSERT INTO table (id,name) VALUES (NULL, 'Bob1'), 
+                                                (NULL, 'Bob2'), 
+                                                (NULL, 'Bob3'); 
 
 Friendly returns
 ------
